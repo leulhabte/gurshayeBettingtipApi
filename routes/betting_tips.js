@@ -13,7 +13,7 @@ route.post('/postTip', authAdmin, async (req, res) => {
     return res.status(201).json({ message: 'Betting Tip inserted', betting_tip: value })
 })
 
-route.get('/getPrediction', async (req, res) => {
+route.get('/getPrediction', authAdmin, async (req, res) => {
     const page = parseInt(req.query.page);
     const perPage = parseInt(req.query.perPage);
 
@@ -40,7 +40,7 @@ route.post('/remove', authAdmin, async (req, res) => {
     return res.status(200).json({ message: 'prediction removed', removed_prediction: remove_tip })
 })
 
-route.post('/updatePrediction', async (req, res) => {
+route.post('/updatePrediction', authAdmin, async (req, res) => {
     const { error } = validatePrediction(req.body);
     if (error) return res.status(400).json({ error: 'Invalid Input Provided' })
 
@@ -50,7 +50,7 @@ route.post('/updatePrediction', async (req, res) => {
     return res.status(400).json({ error: ex })
 })
 
-route.get('/getleagues', async (req, res) => {
+route.get('/getleagues', authAdmin, async (req, res) => {
     const {total, leagues} = await getLeagueStat();
     return res.status(200).json({
         Total: total,
@@ -58,7 +58,7 @@ route.get('/getleagues', async (req, res) => {
     })
 });
 
-route.get('/insertedAtStat', async (req, res)=>{
+route.get('/insertedAtStat', authAdmin, async (req, res)=>{
     const {total, inserted_At} = await getInsertedAtStats();
     return res.status(200).json({
         Total: total,
@@ -66,7 +66,7 @@ route.get('/insertedAtStat', async (req, res)=>{
     })
 });
 
-route.get('/get_iscorrect', async (req, res)=>{
+route.get('/get_iscorrect', authAdmin, async (req, res)=>{
     const page = parseInt(req.query.page);
     const perPage = parseInt(req.query.perPage);
     const is = req.query.is;
@@ -77,7 +77,7 @@ route.get('/get_iscorrect', async (req, res)=>{
     return res.status(200).json({ total_data: count, total_pages, page, perPage, un_marked })
 })
 
-route.get('/get_count', async (req, res)=>{
+route.get('/get_count', authAdmin, async (req, res)=>{
     const is = req.query.is;
     if(is === 'total') {
         const count = await Betting_tip.find().countDocuments()

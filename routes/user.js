@@ -3,6 +3,7 @@ const route = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const { authAdmin } = require('../middleware/auth')
 const {validateChangeProfile, validateLogin, User, changeProfile, logUser} = require('../model/users');
 
 dotenv.config();
@@ -35,7 +36,7 @@ route.post('/login', async (req, res)=>{
     return res.status(200).json({message: 'Logged', token, profile: {Name: value.name, role: value.role}})
 })
 
-route.post('/changeProfile', async (req, res)=>{
+route.post('/changeProfile', authAdmin, async (req, res)=>{
     const {error} = validateChangeProfile(req.body)
     if(error) return res.status(400).json({error: error.message})
 
